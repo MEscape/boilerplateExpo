@@ -1,0 +1,3 @@
+echo "Switched branches. Ensure to check your environment setup! Installing missing dependencies..."
+# Install dependencies when checking out a branch
+npm install

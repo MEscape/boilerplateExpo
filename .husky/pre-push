@@ -1,0 +1,5 @@
+# Prevent pushing to the dev branch
+if [ "$1" = "dev" ]; then
+  echo "You are not allowed to push to the dev branch."
+  exit 1
+fi

@@ -1,0 +1,6 @@
+# Fix ESLint issues and format code
+npm run lint
+
+# Run ts compilation
+npm run compile
+
