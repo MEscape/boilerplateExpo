@@ -62,6 +62,7 @@ export interface IconProps<T extends LibraryTypes> extends TouchableOpacityProps
    * Option to choose between the `Icons` enum or expo-vector-icons library
    */
   library?: T // The type of library being used
+  noColorChange?: boolean
 }
 
 /**
@@ -76,6 +77,7 @@ function IconComponent(props: IconProps<LibraryTypes>): React.ReactNode {
     containerStyle: containerStyleOverride,
     icon,
     library = 'custom' as LibraryTypes, // Default to 'custom'
+    noColorChange,
     size,
     style: imageStyleOverride,
     ...WrapperProps
@@ -118,7 +120,7 @@ function IconComponent(props: IconProps<LibraryTypes>): React.ReactNode {
       {...WrapperProps}
       style={containerStyleOverride}>
       <Image
-        tintColor={color || colors.text}
+        tintColor={!noColorChange ? color || colors.text : undefined}
         style={imageStyle}
         contentFit="contain"
         source={Icons[icon as IconTypes]}

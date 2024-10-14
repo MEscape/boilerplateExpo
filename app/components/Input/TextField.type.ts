@@ -21,6 +21,7 @@ export interface TextFieldIconProps<T extends LibraryTypes> {
   iconColor?: string
   iconLibrary?: T
   size?: number
+  onPress?: () => void
 }
 
 export type Variant = 'filled' | 'outlined' | 'standard'
@@ -31,6 +32,7 @@ export interface TextFieldProps<L extends LibraryTypes, R extends LibraryTypes>
    * The style modifier for disabled input states.
    */
   disabled?: boolean
+  secureTextEntry?: boolean
   /**
    * The label text to display if not using `labelTx`.
    */

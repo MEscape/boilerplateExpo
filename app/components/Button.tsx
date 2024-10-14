@@ -14,7 +14,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { Icon, IconProps, LibraryTypes } from 'app/components'
 import { useColor } from 'app/context'
 import { translate } from 'app/i18n'
-import { Palette } from 'app/theme'
+import { Palette, sizing } from 'app/theme'
 import { moderateScale } from 'app/utils'
 
 import { Text, TextProps } from './Text'
@@ -37,6 +37,8 @@ interface ExtraButtonProps<L extends LibraryTypes, R extends LibraryTypes> {
   rightIcon?: IconProps<R>['icon']
   rightIconColor?: string
   rightIconLibrary?: R
+  rightNoColorChange?: boolean
+  leftNoColorChange?: boolean
   rightIconSize?: number
   leftIconSize?: number
   disabled?: boolean
@@ -49,6 +51,7 @@ interface ButtonIconProps<T extends LibraryTypes> {
   iconColor?: string
   size?: number
   iconLibrary?: T
+  noColorChange?: boolean
 }
 
 export type AnimatedButtonProps = Omit<
@@ -123,11 +126,13 @@ export const ButtonComponent = (props: ButtonProps<LibraryTypes, LibraryTypes>) 
     leftIconColor,
     leftIconLibrary,
     leftIconSize,
+    leftNoColorChange,
     preset = 'primary',
     rightIcon,
     rightIconColor,
     rightIconLibrary,
     rightIconSize,
+    rightNoColorChange,
     title,
     titleChildren,
     titleContainerStyle,
@@ -160,6 +165,7 @@ export const ButtonComponent = (props: ButtonProps<LibraryTypes, LibraryTypes>) 
           iconLibrary={leftIconLibrary}
           iconColor={leftIconColor}
           size={leftIconSize}
+          noColorChange={leftNoColorChange}
         />
         <Text preset="h4" color={colors.text} style={titleStyles} {...titleTextProps}>
           {titleContent}
@@ -169,6 +175,7 @@ export const ButtonComponent = (props: ButtonProps<LibraryTypes, LibraryTypes>) 
           iconLibrary={rightIconLibrary}
           iconColor={rightIconColor}
           size={rightIconSize}
+          noColorChange={rightNoColorChange}
         />
       </View>
     </MemorizedAnimatedTouchableOpacity>
@@ -176,10 +183,19 @@ export const ButtonComponent = (props: ButtonProps<LibraryTypes, LibraryTypes>) 
 }
 
 function ButtonIcon(props: ButtonIconProps<LibraryTypes>): React.ReactNode {
-  const { icon, iconColor, iconLibrary, size } = props
+  const { icon, iconColor, iconLibrary, noColorChange, size } = props
 
   if (icon) {
-    return <Icon icon={icon} library={iconLibrary} color={iconColor} size={size} />
+    return (
+      <Icon
+        style={{ paddingHorizontal: sizing.spacing.md }}
+        icon={icon}
+        library={iconLibrary}
+        color={iconColor}
+        size={size || 24}
+        noColorChange={noColorChange}
+      />
+    )
   }
 
   return null

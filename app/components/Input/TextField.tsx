@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   NativeSyntheticEvent,
   Platform,
@@ -75,6 +75,7 @@ const TextFieldComponent = <L extends LibraryTypes, R extends LibraryTypes>(
     rightIconContainerStyle,
     rightIconLibrary,
     rightIconSize,
+    secureTextEntry,
     style,
     variant = 'filled',
     ...rest
@@ -91,6 +92,7 @@ const TextFieldComponent = <L extends LibraryTypes, R extends LibraryTypes>(
 
   const hovered = useSharedValue(false)
   const focused = useSharedValue(false)
+  const [showPassword, setShowPassword] = useState(secureTextEntry)
 
   const handleMouseEnter = useCallback(
     (event: NativeSyntheticEvent<TargetedEvent>) => {
@@ -299,12 +301,15 @@ const TextFieldComponent = <L extends LibraryTypes, R extends LibraryTypes>(
         )}
 
         <AnimatedTextInput
+          selectionColor={onFocusLabelColor || colors.accent}
           ref={ref}
           style={animatedInputStyles}
           animatedProps={animatedPlaceholder}
           placeholderTextColor={labelColor || colors.text}
           onFocus={handleFocus}
+          spellCheck={false}
           onBlur={handleBlur}
+          secureTextEntry={showPassword}
           {...({
             onMouseEnter: handleMouseEnter,
             onMouseLeave: handleMouseLeave,
@@ -312,13 +317,14 @@ const TextFieldComponent = <L extends LibraryTypes, R extends LibraryTypes>(
           } as any)}
         />
 
-        {rightIcon && (
+        {(rightIcon || secureTextEntry) && (
           <Animated.View style={[styles.trailing, animatedTrailing, rightIconContainerStyle]}>
             <TextFieldIcon
-              icon={rightIcon}
-              iconLibrary={rightIconLibrary}
-              iconColor={rightIconColor}
+              icon={secureTextEntry ? (showPassword ? 'eye-off' : 'eye') : rightIcon}
+              iconLibrary={secureTextEntry ? 'Ionicons' : rightIconLibrary}
+              iconColor={rightIconColor || colors.text}
               size={rightIconSize}
+              onPress={() => setShowPassword(prev => !prev)}
             />
           </Animated.View>
         )}
@@ -366,10 +372,12 @@ const TextFieldComponent = <L extends LibraryTypes, R extends LibraryTypes>(
 }
 
 function TextFieldIcon<T extends LibraryTypes>(props: TextFieldIconProps<T>) {
-  const { icon, iconColor, iconLibrary, size } = props
+  const { icon, iconColor, iconLibrary, onPress, size } = props
 
   if (icon) {
-    return <Icon icon={icon} library={iconLibrary} color={iconColor} size={size} />
+    return (
+      <Icon icon={icon} library={iconLibrary} color={iconColor} size={size} onPress={onPress} />
+    )
   }
 
   return null
@@ -425,6 +433,7 @@ const inputStyles = ({ background }: Palette) =>
     },
     trailing: {
       alignItems: 'center',
+      cursor: 'pointer',
       height: sizing.spacing.lg,
       justifyContent: 'center',
       width: sizing.spacing.lg,

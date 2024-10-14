@@ -195,6 +195,8 @@ function ScreenWithScrolling(props: ScreenProps): React.ReactNode {
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       {...{ keyboardShouldPersistTaps, ref, scrollEnabled }}
       {...ScrollViewProps}
       onLayout={e => {
